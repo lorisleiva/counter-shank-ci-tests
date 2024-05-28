@@ -156,6 +156,22 @@ jobs:
       - name: Test JS client
         run: pnpm clients:js:test
 
+  lint_js:
+    name: Lint JS client
+    needs: build_programs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v4
+      - name: Setup environment
+        uses: ./.github/setup
+        with:
+          node: ${{ env.NODE_VERSION }}
+          solana: ${{ env.SOLANA_VERSION }}
+          cache: ${{ env.CACHE }}
+      - name: Lint JS client
+        run: pnpm clients:js:lint
+
   test_rust:
     name: Test Rust client
     needs: build_programs
@@ -187,3 +203,19 @@ jobs:
           key: ${{ runner.os }}-builds-${{ github.sha }}
       - name: Test Rust client
         run: pnpm clients:rust:test
+
+  lint_rust:
+    name: Lint Rust client
+    needs: build_programs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v4
+      - name: Setup environment
+        uses: ./.github/setup
+        with:
+          node: ${{ env.NODE_VERSION }}
+          solana: ${{ env.SOLANA_VERSION }}
+          cache: ${{ env.CACHE }}
+      - name: Lint Rust client
+        run: pnpm clients:rust:lint
