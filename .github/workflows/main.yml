@@ -19,7 +19,8 @@ jobs:
     steps:
       - name: Git checkout
         uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
+      - name: Setup environment
+        uses: ./.github/actions/setup.yml
         with:
           node: ${{ env.NODE_VERSION }}
           solana: ${{ env.SOLANA_VERSION }}
