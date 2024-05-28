@@ -1,0 +1,32 @@
+name: Setup environment
+
+inputs:
+  cache:
+    description: Enable caching
+    default: "true"
+  node:
+    description: Node.js version
+    required: true
+  solana:
+    description: Solana version
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Git checkout
+      uses: actions/checkout@v4
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v3
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node }}
+        cache: "pnpm"
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+    - name: Install Solana
+      uses: metaplex-foundation/actions/install-solana@v1
+      with:
+        version: ${{ inputs.solana }}
+        cache: ${{ inputs.cache }}
