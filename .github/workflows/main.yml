@@ -79,7 +79,7 @@ jobs:
         run: pnpm programs:test
 
   generate_idls:
-    name: Generate IDLs
+    name: Check IDL generation
     needs: build_programs
     runs-on: ubuntu-latest
     steps:
@@ -118,7 +118,7 @@ jobs:
         run: test -z "$(git status --porcelain)"
 
   generate_clients:
-    name: Generate clients
+    name: Check client generation
     needs: build_programs
     runs-on: ubuntu-latest
     steps:
@@ -169,6 +169,17 @@ jobs:
           node: ${{ env.NODE_VERSION }}
           solana: ${{ env.SOLANA_VERSION }}
           cache: ${{ env.CACHE }}
+      - name: Cache Rust client dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-rust-client-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-rust-client
       - name: Restore all builds
         uses: actions/cache/restore@v4
         with:
