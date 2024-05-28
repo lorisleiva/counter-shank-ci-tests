@@ -24,7 +24,7 @@ jobs:
           node: ${{ env.NODE_VERSION }}
           solana: ${{ env.SOLANA_VERSION }}
           cache: ${{ env.CACHE }}
-      - name: Cache dependencies
+      - name: Cache cargo dependencies
         uses: actions/cache@v4
         with:
           path: |
@@ -61,7 +61,7 @@ jobs:
           node: ${{ env.NODE_VERSION }}
           solana: ${{ env.SOLANA_VERSION }}
           cache: ${{ env.CACHE }}
-      - name: Cache test dependencies
+      - name: Cache test cargo dependencies
         uses: actions/cache@v4
         with:
           path: |
@@ -91,7 +91,7 @@ jobs:
           node: ${{ env.NODE_VERSION }}
           solana: ${{ env.SOLANA_VERSION }}
           cache: ${{ env.CACHE }}
-      - name: Cache dependencies
+      - name: Cache cargo dependencies
         uses: actions/cache@v4
         with:
           path: |
@@ -102,6 +102,16 @@ jobs:
             target/
           key: ${{ runner.os }}-programs-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-programs
+      - name: Cache local cargo dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            .cargo/bin/
+            .cargo/registry/index/
+            .cargo/registry/cache/
+            .cargo/git/db/
+          key: ${{ runner.os }}-local-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-local-cargo
       - name: Generate IDLs
         run: pnpm generate:idls
       - name: Ensure working directory is clean
