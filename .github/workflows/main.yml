@@ -47,7 +47,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: ./**/*.so
-          key: ${{ runner.os }}-program-builds-${{ hashFiles('**/*.so') }}
+          key: ${{ runner.os }}-builds-${{ github.head_ref }}-${{ github.sha }}
 
   test_programs:
     name: Test programs
@@ -135,12 +135,26 @@ jobs:
       - name: Ensure working directory is clean
         run: test -z "$(git status --porcelain)"
 
-  # test_js:
-  #   if: needs.changes.outputs.js_client == 'true'
-  #   name: JS Client
-  #   needs: generate_clients
-  #   uses: ./.github/workflows/test-js-client.yml
-  #   secrets: inherit
+  test_js:
+    name: Test JS client
+    needs: generate_clients
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v4
+      - name: Setup environment
+        uses: ./.github/setup
+        with:
+          node: ${{ env.NODE_VERSION }}
+          solana: ${{ env.SOLANA_VERSION }}
+          cache: ${{ env.CACHE }}
+      - name: Restore all builds
+        uses: actions/cache/restore@v4
+        with:
+          path: ./**/*.so
+          key: ${{ runner.os }}-builds-${{ github.head_ref }}-${{ github.sha }}
+      - name: Test JS client
+        run: pnpm clients:js:test
 
   # test_rust_client:
   #   if: needs.changes.outputs.rust_client == 'true'
