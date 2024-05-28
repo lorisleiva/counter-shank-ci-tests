@@ -20,7 +20,7 @@ jobs:
       - name: Git checkout
         uses: actions/checkout@v4
       - name: Setup environment
-        uses: ./.github/actions/setup.yml
+        uses: ./.github/setup
         with:
           node: ${{ env.NODE_VERSION }}
           solana: ${{ env.SOLANA_VERSION }}
