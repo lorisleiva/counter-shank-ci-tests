@@ -117,51 +117,23 @@ jobs:
       - name: Ensure working directory is clean
         run: test -z "$(git status --porcelain)"
 
-  # generate_clients:
-  #   name: Generate clients
-  #   needs: build_programs
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Git checkout
-  #       uses: actions/checkout@v3
-
-  #     - name: Load environment variables
-  #       run: cat .github/.env >> $GITHUB_ENV
-
-  #     - name: Install Linux Build Deps
-  #       run: sudo apt-get update && sudo apt-get install -y pkg-config build-essential libudev-dev
-
-  #     - name: Install Rust
-  #       uses: metaplex-foundation/actions/install-rust@v1
-  #       with:
-  #         toolchain: ${{ env.RUST_VERSION }}
-
-  #     - name: Install Solana
-  #       uses: metaplex-foundation/actions/install-solana@v1
-  #       with:
-  #         version: ${{ env.SOLANA_VERSION }}
-  #         cache: ${{ env.CACHE }}
-
-  #     - name: Cache program dependencies
-  #       if: env.CACHE == 'true'
-  #       uses: metaplex-foundation/actions/cache-programs@v1
-
-  #     - name: Install Node.js
-  #       uses: metaplex-foundation/actions/install-node-with-pnpm@v1
-  #       with:
-  #         version: ${{ env.NODE_VERSION }}
-  #         cache: ${{ env.CACHE }}
-  #         dependencies: true
-
-  #     - name: Cache IDL generators
-  #       if: env.CACHE == 'true'
-  #       uses: metaplex-foundation/actions/cache-idl-generators@v1
-
-  #     - name: Generate IDLs and clients
-  #       run: pnpm generate
-
-  #     - name: Ensure working directory is clean
-  #       run: test -z "$(git status --porcelain)"
+  generate_clients:
+    name: Generate clients
+    needs: generate_idls
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v4
+      - name: Setup environment
+        uses: ./.github/setup
+        with:
+          node: ${{ env.NODE_VERSION }}
+          solana: ${{ env.SOLANA_VERSION }}
+          cache: ${{ env.CACHE }}
+      - name: Generate clients
+        run: pnpm generate:clients
+      - name: Ensure working directory is clean
+        run: test -z "$(git status --porcelain)"
 
   # test_js:
   #   if: needs.changes.outputs.js_client == 'true'
