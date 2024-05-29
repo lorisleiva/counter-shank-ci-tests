@@ -7,9 +7,14 @@ on:
     branches: [main]
 
 env:
-  CACHE: true
   NODE_VERSION: 18
   SOLANA_VERSION: 1.18.12
+  CARGO_CACHE: |
+    ~/.cargo/bin/
+    ~/.cargo/registry/index/
+    ~/.cargo/registry/cache/
+    ~/.cargo/git/db/
+    target/
 
 jobs:
   build_programs:
@@ -19,22 +24,16 @@ jobs:
       - name: Git checkout
         uses: actions/checkout@v4
       - name: Setup environment
-        uses: ./.github/setup
+        uses: ./.github/actions/setup
         with:
           node: ${{ env.NODE_VERSION }}
           solana: ${{ env.SOLANA_VERSION }}
-          cache: ${{ env.CACHE }}
       - name: Cache cargo dependencies
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-programs-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-programs
+          path: ${{ env.CARGO_CACHE }}
+          key: ${{ runner.os }}-cargo-programs-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-programs
       - name: Build programs
         run: pnpm programs:build
       - name: Upload program builds
@@ -56,25 +55,19 @@ jobs:
       - name: Git checkout
         uses: actions/checkout@v4
       - name: Setup environment
-        uses: ./.github/setup
+        uses: ./.github/actions/setup
         with:
           node: ${{ env.NODE_VERSION }}
           solana: ${{ env.SOLANA_VERSION }}
-          cache: ${{ env.CACHE }}
       - name: Cache test cargo dependencies
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-program-tests-${{ hashFiles('**/Cargo.lock') }}
+          path: ${{ env.CARGO_CACHE }}
+          key: ${{ runner.os }}-cargo-program-tests-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
-            ${{ runner.os }}-program-tests
-            ${{ runner.os }}-programs-${{ hashFiles('**/Cargo.lock') }}
-            ${{ runner.os }}-programs
+            ${{ runner.os }}-cargo-program-tests
+            ${{ runner.os }}-cargo-programs-${{ hashFiles('**/Cargo.lock') }}
+            ${{ runner.os }}-cargo-programs
       - name: Test programs
         run: pnpm programs:test
 
@@ -86,22 +79,16 @@ jobs:
       - name: Git checkout
         uses: actions/checkout@v4
       - name: Setup environment
-        uses: ./.github/setup
+        uses: ./.github/actions/setup
         with:
           node: ${{ env.NODE_VERSION }}
           solana: ${{ env.SOLANA_VERSION }}
-          cache: ${{ env.CACHE }}
       - name: Cache cargo dependencies
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-programs-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-programs
+          path: ${{ env.CARGO_CACHE }}
+          key: ${{ runner.os }}-cargo-programs-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-programs
       - name: Cache local cargo dependencies
         uses: actions/cache@v4
         with:
@@ -110,8 +97,8 @@ jobs:
             .cargo/registry/index/
             .cargo/registry/cache/
             .cargo/git/db/
-          key: ${{ runner.os }}-local-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-local-cargo
+          key: ${{ runner.os }}-cargo-local-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-local
       - name: Generate IDLs
         run: pnpm generate:idls
       - name: Ensure working directory is clean
@@ -125,11 +112,10 @@ jobs:
       - name: Git checkout
         uses: actions/checkout@v4
       - name: Setup environment
-        uses: ./.github/setup
+        uses: ./.github/actions/setup
         with:
           node: ${{ env.NODE_VERSION }}
           solana: ${{ env.SOLANA_VERSION }}
-          cache: ${{ env.CACHE }}
       - name: Generate clients
         run: pnpm generate:clients
       - name: Ensure working directory is clean
@@ -143,11 +129,10 @@ jobs:
       - name: Git checkout
         uses: actions/checkout@v4
       - name: Setup environment
-        uses: ./.github/setup
+        uses: ./.github/actions/setup
         with:
           node: ${{ env.NODE_VERSION }}
           solana: ${{ env.SOLANA_VERSION }}
-          cache: ${{ env.CACHE }}
       - name: Restore all builds
         uses: actions/cache/restore@v4
         with:
@@ -164,11 +149,10 @@ jobs:
       - name: Git checkout
         uses: actions/checkout@v4
       - name: Setup environment
-        uses: ./.github/setup
+        uses: ./.github/actions/setup
         with:
           node: ${{ env.NODE_VERSION }}
           solana: ${{ env.SOLANA_VERSION }}
-          cache: ${{ env.CACHE }}
       - name: Lint JS client
         run: pnpm clients:js:lint
 
@@ -180,22 +164,16 @@ jobs:
       - name: Git checkout
         uses: actions/checkout@v4
       - name: Setup environment
-        uses: ./.github/setup
+        uses: ./.github/actions/setup
         with:
           node: ${{ env.NODE_VERSION }}
           solana: ${{ env.SOLANA_VERSION }}
-          cache: ${{ env.CACHE }}
       - name: Cache Rust client dependencies
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-rust-client-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-rust-client
+          path: ${{ env.CARGO_CACHE }}
+          key: ${{ runner.os }}-cargo-rust-client-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-rust-client
       - name: Restore all builds
         uses: actions/cache/restore@v4
         with:
@@ -212,10 +190,9 @@ jobs:
       - name: Git checkout
         uses: actions/checkout@v4
       - name: Setup environment
-        uses: ./.github/setup
+        uses: ./.github/actions/setup
         with:
           node: ${{ env.NODE_VERSION }}
           solana: ${{ env.SOLANA_VERSION }}
-          cache: ${{ env.CACHE }}
       - name: Lint Rust client
         run: pnpm clients:rust:lint
