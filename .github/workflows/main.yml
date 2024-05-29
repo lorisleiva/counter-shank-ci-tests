@@ -152,7 +152,6 @@ jobs:
         uses: ./.github/actions/setup
         with:
           node: ${{ env.NODE_VERSION }}
-          solana: ${{ env.SOLANA_VERSION }}
       - name: Lint JS client
         run: pnpm clients:js:lint
 
@@ -193,6 +192,5 @@ jobs:
         uses: ./.github/actions/setup
         with:
           node: ${{ env.NODE_VERSION }}
-          solana: ${{ env.SOLANA_VERSION }}
       - name: Lint Rust client
         run: pnpm clients:rust:lint
