@@ -194,5 +194,5 @@ jobs:
         with:
           node: ${{ env.NODE_VERSION }}
           solana: ${{ env.SOLANA_VERSION }}
-      - name: Lint Rust client
+      - name: Lint Rust clients
         run: pnpm clients:rust:lint
