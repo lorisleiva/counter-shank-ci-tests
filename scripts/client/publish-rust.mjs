@@ -1,6 +1,6 @@
 #!/usr/bin/env zx
 import 'zx/globals';
-import { cliArguments, workingDirectory } from '../utils.mrust';
+import { cliArguments, workingDirectory } from '../utils.mjs';
 
 const dryRun = argv.dryRun ?? false;
 const [level] = cliArguments();
@@ -31,7 +31,7 @@ if (process.env.CI) {
 
 // Stop here if this is a dry run.
 if (dryRun) {
-  return;
+  process.exit(0);
 }
 
 // Soft reset the last commit so we can create our own commit and tag.
