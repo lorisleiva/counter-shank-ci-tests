@@ -89,8 +89,8 @@ jobs:
 
       - name: Set Git Author
         run: |
-          git config --global user.email "${{ env.COMMIT_USER_EMAIL }}"
-          git config --global user.name "${{ env.COMMIT_USER_NAME }}"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
 
       - name: Publish JS Client
         id: publish
