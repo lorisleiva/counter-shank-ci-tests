@@ -1,5 +1,5 @@
 [package]
-name = "solana-program-counter-client"
+name = "loris-sandbox-spl-counter-test"
 version = "0.0.0"
 edition = "2021"
 readme = "README.md"
