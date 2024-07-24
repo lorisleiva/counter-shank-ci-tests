@@ -1,6 +1,6 @@
 {
   "name": "@loris-sandbox/spl-counter-test",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "JavaScript client for the Counter program",
   "sideEffects": false,
   "module": "./dist/src/index.mjs",
