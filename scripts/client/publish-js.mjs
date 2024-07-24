@@ -29,7 +29,7 @@ await $`pnpm publish --no-git-checks --tag ${tag}`;
 
 // Commit the new version.
 const commitMessage = `Publish JS client v${newVersion}`;
-await $`git commit -am "${commitMessage}"`;
+await $`git commit -am \"${commitMessage}\"`;
 
 // Tag the new version.
 const tagMessage = `js@v${newVersion}`;
