@@ -87,6 +87,11 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Set Git Author
+        run: |
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
       - name: Publish JS Client
         id: publish
         run: pnpm clients:js:publish ${{ inputs.level }} ${{ inputs.tag }}
