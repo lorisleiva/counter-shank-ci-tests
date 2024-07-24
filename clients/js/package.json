@@ -1,5 +1,5 @@
 {
-  "name": "@solana-program/counter",
+  "name": "@loris-sandbox/spl-counter-test",
   "version": "0.0.0",
   "description": "JavaScript client for the Counter program",
   "sideEffects": false,
@@ -54,7 +54,9 @@
     "typescript": "^5.5.3"
   },
   "ava": {
-    "nodeArguments": ["--no-warnings"],
+    "nodeArguments": [
+      "--no-warnings"
+    ],
     "require": [
       "@solana/webcrypto-ed25519-polyfill"
     ],
