@@ -73,6 +73,15 @@ jobs:
         with:
           node: ${{ env.NODE_VERSION }}
 
+      - name: Ensure NPM_TOKEN variable is set
+        env:
+          token: ${{ secrets.NPM_TOKEN }}
+        if: ${{ env.token == '' }}
+        run: |
+          echo "The NPM_TOKEN secret variable is not set"
+          echo "Go to \"Settings\" -> \"Secrets and variables\" -> \"Actions\" -> \"New repository secret\"."
+          exit 1
+
       - name: NPM Authentication
         run: pnpm config set '//registry.npmjs.org/:_authToken' "${NODE_AUTH_TOKEN}"
         env:
