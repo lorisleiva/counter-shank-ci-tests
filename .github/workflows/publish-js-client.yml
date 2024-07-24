@@ -99,9 +99,6 @@ jobs:
       - name: Push Commit and Tag
         run: git push origin --follow-tags
 
-      - name: Test new version exposure
-        run: echo {{ steps.publish.outputs.new_version }}
-
       - name: Create GitHub release
         if: github.event.inputs.create_release == 'true'
         uses: ncipollo/release-action@v1
