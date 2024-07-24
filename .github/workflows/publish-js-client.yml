@@ -1,0 +1,117 @@
+name: Publish JS Client
+
+on:
+  workflow_dispatch:
+    inputs:
+      level:
+        description: Version level
+        required: true
+        default: patch
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+          - prerelease
+          - prepatch
+          - preminor
+          - premajor
+      tag:
+        description: NPM Tag (and preid for pre-releases)
+        required: true
+        type: string
+        default: latest
+      create_release:
+        description: Create a GitHub release
+        required: true
+        type: boolean
+        default: true
+
+env:
+  NODE_VERSION: 18
+  SOLANA_VERSION: 1.18.18
+
+jobs:
+  test_js:
+    name: Test JS client
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Environment
+        uses: ./.github/actions/setup
+        with:
+          cargo-cache-key: cargo-programs
+          node: ${{ env.NODE_VERSION }}
+          solana: ${{ env.SOLANA_VERSION }}
+
+      - name: Format JS Client
+        run: pnpm clients:js:format
+
+      - name: Lint JS Client
+        run: pnpm clients:js:lint
+
+      - name: Build Programs
+        run: pnpm programs:build
+
+      - name: Test JS Client
+        run: pnpm clients:js:test
+
+  publish_js:
+    name: Publish JS client
+    runs-on: ubuntu-latest
+    needs: test_js
+    permissions:
+      contents: write
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Environment
+        uses: ./.github/actions/setup
+        with:
+          node: ${{ env.NODE_VERSION }}
+
+      - name: NPM Authentication
+        run: pnpm config set '//registry.npmjs.org/:_authToken' "${NODE_AUTH_TOKEN}"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish JS Client
+        run: pnpm clients:js:publish
+
+      # inputs: level, tag
+      # outputs: new_version
+      # build
+      # version
+      # publish
+
+      # - name: Version client
+      #   id: level
+      #   working-directory: ./clients/js
+      #   run: |
+      #     if [ "${{ startsWith(inputs.level, 'pre') }}" == "true" ]; then
+      #       pnpm version ${{ inputs.level }} --preid ${{ inputs.tag }} --no-git-tag-version
+      #     else
+      #       pnpm version ${{ inputs.level }} --no-git-tag-version
+      #     fi
+      #     echo "new_version=$(pnpm pkg get version | sed 's/"//g')" >> $GITHUB_OUTPUT
+
+      # - name: Publish
+      #   working-directory: ./clients/js
+      #   run: pnpm publish --no-git-checks --tag ${{ inputs.tag }}
+
+      # --- below isn't part of the publish script.
+
+      # - name: Commit and tag new version
+      #   uses: stefanzweifel/git-auto-commit-action@v4
+      #   with:
+      #     commit_message: Deploy JS client v${{ steps.level.outputs.new_version }}
+      #     tagging_message: js@v${{ steps.level.outputs.new_version }}
+
+      # - name: Create GitHub release
+      #   if: github.event.inputs.create_release == 'true'
+      #   uses: ncipollo/release-action@v1
+      #   with:
+      #     tag: js@v${{ steps.level.outputs.new_version }}
