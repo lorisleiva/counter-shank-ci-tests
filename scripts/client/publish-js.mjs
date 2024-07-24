@@ -3,7 +3,6 @@ import 'zx/globals';
 import { cliArguments, workingDirectory } from '../utils.mjs';
 
 const [level, tag = 'latest'] = cliArguments();
-
 if (!level) {
   throw new Error('A version level — e.g. "path" — must be provided.');
 }
@@ -20,11 +19,13 @@ const versionArgs = [
 let { stdout } = await $`pnpm version ${level} ${versionArgs}`;
 const newVersion = stdout.slice(1).trim();
 
-// if (process.env.CI) {
-//   await $`echo "new_version=$(pnpm pkg get version | sed 's/"//g')" >> $GITHUB_OUTPUT`;
-// }
+// Expose the new version to CI if needed.
+if (process.env.CI) {
+  await $`echo "new_version=${newVersion}" >> $GITHUB_OUTPUT`;
+}
 
 // Publish the package.
+// This will also build the package before publishing (see prepublishOnly script).
 await $`pnpm publish --no-git-checks --tag ${tag}`;
 
 // Commit the new version.

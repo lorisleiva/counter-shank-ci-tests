@@ -79,39 +79,17 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish JS Client
-        run: pnpm clients:js:publish
+        id: publish
+        run: pnpm clients:js:publish ${{ inputs.level }} ${{ inputs.tag }}
 
-      # inputs: level, tag
-      # outputs: new_version
-      # build
-      # version
-      # publish
+      - name: Push Commit and Tag
+        run: git push origin --follow-tags
 
-      # - name: Version client
-      #   id: level
-      #   working-directory: ./clients/js
-      #   run: |
-      #     if [ "${{ startsWith(inputs.level, 'pre') }}" == "true" ]; then
-      #       pnpm version ${{ inputs.level }} --preid ${{ inputs.tag }} --no-git-tag-version
-      #     else
-      #       pnpm version ${{ inputs.level }} --no-git-tag-version
-      #     fi
-      #     echo "new_version=$(pnpm pkg get version | sed 's/"//g')" >> $GITHUB_OUTPUT
+      - name: Test new version exposure
+        run: echo {{ steps.publish.outputs.new_version }}
 
-      # - name: Publish
-      #   working-directory: ./clients/js
-      #   run: pnpm publish --no-git-checks --tag ${{ inputs.tag }}
-
-      # --- below isn't part of the publish script.
-
-      # - name: Commit and tag new version
-      #   uses: stefanzweifel/git-auto-commit-action@v4
-      #   with:
-      #     commit_message: Deploy JS client v${{ steps.level.outputs.new_version }}
-      #     tagging_message: js@v${{ steps.level.outputs.new_version }}
-
-      # - name: Create GitHub release
-      #   if: github.event.inputs.create_release == 'true'
-      #   uses: ncipollo/release-action@v1
-      #   with:
-      #     tag: js@v${{ steps.level.outputs.new_version }}
+      - name: Create GitHub release
+        if: github.event.inputs.create_release == 'true'
+        uses: ncipollo/release-action@v1
+        with:
+          tag: js@v${{ steps.publish.outputs.new_version }}
