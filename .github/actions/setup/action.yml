@@ -10,6 +10,9 @@ inputs:
   cargo-cache-local-key:
     description: The key to cache local cargo dependencies. Skips local cargo caching if not provided.
     required: false
+  cargo-release:
+    description: Install Cargo Release if `true`. Defaults to `false`.
+    required: false
   clippy:
     description: Install Clippy if `true`. Defaults to `false`.
     required: false
@@ -53,6 +56,13 @@ runs:
       with:
         toolchain: ${{ env.TOOLCHAIN_LINT }}
         components: clippy
+
+    - name: Install Cargo Release
+      if: ${{ inputs.cargo-release == 'true' }}
+      uses: dtolnay/rust-toolchain@master
+      with:
+        toolchain: ${{ env.TOOLCHAIN_FORMAT }}
+        components: cargo-release
 
     - name: Install Solana
       if: ${{ inputs.solana == 'true' }}

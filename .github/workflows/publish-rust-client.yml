@@ -74,6 +74,7 @@ jobs:
         uses: ./.github/actions/setup
         with:
           cargo-cache-key: cargo-rust-client
+          cargo-release: true
           clippy: true
           rustfmt: true
 
