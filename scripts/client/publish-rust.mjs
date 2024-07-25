@@ -2,7 +2,7 @@
 import 'zx/globals';
 import { cliArguments, getCargo, workingDirectory } from '../utils.mjs';
 
-const dryRun = argv.dryRun ?? false;
+const dryRun = argv['dry-run'] ?? false;
 const [level] = cliArguments();
 if (!level) {
   throw new Error('A version level — e.g. "path" — must be provided.');
