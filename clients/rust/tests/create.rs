@@ -1,7 +1,7 @@
 #![cfg(feature = "test-sbf")]
 
 use borsh::BorshDeserialize;
-use solana_program_counter_client::{accounts::Counter, instructions::CreateBuilder};
+use loris_sandbox_spl_counter_test::{accounts::Counter, instructions::CreateBuilder};
 use solana_program_test::{tokio, ProgramTest};
 use solana_sdk::{signature::Signer, transaction::Transaction};
 
@@ -9,7 +9,7 @@ use solana_sdk::{signature::Signer, transaction::Transaction};
 async fn create() {
     let mut context = ProgramTest::new(
         "solana_program_counter",
-        solana_program_counter_client::ID,
+        loris_sandbox_spl_counter_test::ID,
         None,
     )
     .start_with_context()
