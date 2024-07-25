@@ -85,7 +85,7 @@ export function getCargoMetadata(folder) {
 }
 
 export function getSolanaVersion() {
-  return getCargoMetadata()?.solana;
+  return getCargoMetadata()?.cli?.solana;
 }
 
 export function getToolchain(operation) {
