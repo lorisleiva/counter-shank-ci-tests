@@ -17,6 +17,11 @@ const releaseArgs = dryRun
   : ['--no-push', '--no-tag', '--no-confirm', '--execute'];
 await $`cargo release ${level} ${releaseArgs}`;
 
+// Stop here if this is a dry run.
+if (dryRun) {
+  process.exit(0);
+}
+
 // Get the new version.
 const newVersion = getCargo(path.join('clients', 'rust')).package.version;
 console.log({ newVersion });
@@ -24,11 +29,6 @@ console.log({ newVersion });
 // Expose the new version to CI if needed.
 if (process.env.CI) {
   await $`echo "new_version=${newVersion}" >> $GITHUB_OUTPUT`;
-}
-
-// Stop here if this is a dry run.
-if (dryRun) {
-  process.exit(0);
 }
 
 // Soft reset the last commit so we can create our own commit and tag.
