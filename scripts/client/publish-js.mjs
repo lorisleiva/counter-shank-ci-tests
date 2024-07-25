@@ -32,4 +32,4 @@ await $`pnpm publish --no-git-checks --tag ${tag}`;
 await $`git commit -am "Publish JS client v${newVersion}"`;
 
 // Tag the new version.
-await $`git tag js@v${newVersion}`;
+await $`git tag -a js@v${newVersion} -m "JS client v${newVersion}"`;
