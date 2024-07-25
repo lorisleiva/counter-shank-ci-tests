@@ -1,14 +1,9 @@
 #!/usr/bin/env zx
 import 'zx/globals';
-import { getSolanaVersion } from './utils.mjs';
+import { getInstalledSolanaVersion, getSolanaVersion } from './utils.mjs';
 
-export async function getInstalledSolanaVersion() {
-  const { stdout } = await $`solana --version`.quiet();
-  return stdout.match(/(\d+\.\d+\.\d+)/)?.[1];
-}
-
-const installedVersion = await getInstalledSolanaVersion();
 const expectedVersion = getSolanaVersion();
+const installedVersion = await getInstalledSolanaVersion();
 
 if (installedVersion !== expectedVersion) {
   echo(

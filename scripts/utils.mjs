@@ -115,3 +115,16 @@ export function partitionArguments(args, delimiter) {
     ? [args.slice(0, index), args.slice(index + 1)]
     : [args, []];
 }
+
+export async function getInstalledSolanaVersion() {
+  try {
+    const { stdout } = await $`solana --version`.quiet();
+    return stdout.match(/(\d+\.\d+\.\d+)/)?.[1];
+  } catch (error) {
+    echo(
+      chalk.red('[ ERROR ]'),
+      `No Solana installation found. Please install Solana ${getSolanaVersion()} before proceeding.`
+    );
+    process.exit(1);
+  }
+}
