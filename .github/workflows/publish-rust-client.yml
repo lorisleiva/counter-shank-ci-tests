@@ -73,7 +73,8 @@ jobs:
       - name: Setup Environment
         uses: ./.github/actions/setup
         with:
-          cargo-cache-key: cargo-rust-client
+          cargo-cache-key: cargo-publish-rust-client
+          cargo-cache-fallback-key: cargo-rust-client
           clippy: true
           rustfmt: true
 
@@ -113,6 +114,7 @@ jobs:
           pnpm clients:rust:publish $LEVEL $OPTIONS
 
       - name: Push Commit and Tag
+        if: github.event.inputs.dry_run != 'true'
         run: git push origin --follow-tags
 
       - name: Create GitHub release
