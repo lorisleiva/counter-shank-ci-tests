@@ -43,8 +43,7 @@ jobs:
         uses: ./.github/actions/setup
         with:
           cargo-cache-key: cargo-programs
-          node: ${{ env.NODE_VERSION }}
-          solana: ${{ env.SOLANA_VERSION }}
+          solana: true
 
       - name: Format JS Client
         run: pnpm clients:js:format
@@ -71,7 +70,6 @@ jobs:
       - name: Setup Environment
         uses: ./.github/actions/setup
         with:
-          node: ${{ env.NODE_VERSION }}
 
       - name: Ensure NPM_TOKEN variable is set
         env:
