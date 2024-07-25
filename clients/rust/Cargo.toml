@@ -1,6 +1,6 @@
 [package]
 name = "loris-sandbox-spl-counter-test"
-version = "0.0.1"
+version = "0.0.2"
 description = "A generated Rust library for the Counter program"
 repository = "https://github.com/lorisleiva/counter-shank-ci-tests"
 edition = "2021"
