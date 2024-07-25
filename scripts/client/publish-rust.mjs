@@ -24,7 +24,6 @@ if (dryRun) {
 
 // Get the new version.
 const newVersion = getCargo(path.join('clients', 'rust')).package.version;
-console.log({ newVersion });
 
 // Expose the new version to CI if needed.
 if (process.env.CI) {
