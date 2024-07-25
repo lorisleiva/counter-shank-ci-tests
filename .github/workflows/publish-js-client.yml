@@ -69,7 +69,6 @@ jobs:
 
       - name: Setup Environment
         uses: ./.github/actions/setup
-        with:
 
       - name: Ensure NPM_TOKEN variable is set
         env:

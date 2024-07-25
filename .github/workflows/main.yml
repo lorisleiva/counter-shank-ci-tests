@@ -35,7 +35,6 @@ jobs:
 
       - name: Setup Environment
         uses: ./.github/actions/setup
-        with:
 
       - name: Format Client JS
         run: pnpm clients:js:format
