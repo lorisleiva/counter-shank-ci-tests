@@ -12,10 +12,9 @@ if (!level) {
 cd(path.join(workingDirectory, 'clients', 'rust'));
 
 // Publish the new version.
-const releaseArgs = [
-  '--no-git-tag-version',
-  ...(dryRun ? [] : ['--no-push', '--no-tag', '--no-confirm', '--execute']),
-];
+const releaseArgs = dryRun
+  ? []
+  : ['--no-push', '--no-tag', '--no-confirm', '--execute'];
 await $`cargo release ${level} ${releaseArgs}`;
 
 // Get the new version.
