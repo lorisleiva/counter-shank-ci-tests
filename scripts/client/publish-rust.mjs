@@ -1,6 +1,6 @@
 #!/usr/bin/env zx
 import 'zx/globals';
-import { cliArguments, workingDirectory } from '../utils.mjs';
+import { cliArguments, getCargo, workingDirectory } from '../utils.mjs';
 
 const dryRun = argv.dryRun ?? false;
 const [level] = cliArguments();
@@ -18,9 +18,7 @@ const releaseArgs = dryRun
 await $`cargo release ${level} ${releaseArgs}`;
 
 // Get the new version.
-let { stdout } =
-  await $`grep -E '^version\s*=' Cargo.toml | awk -F '"' '{print $2}'`;
-const newVersion = stdout;
+const newVersion = getCargo(path.join('clients', 'rust')).package.version;
 console.log({ newVersion });
 
 // Expose the new version to CI if needed.
