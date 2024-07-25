@@ -84,6 +84,10 @@ export function getCargoMetadata(folder) {
   return folder ? cargo?.package?.metadata : cargo?.workspace?.metadata;
 }
 
+export function getSolanaVersion() {
+  return getCargoMetadata()?.solana;
+}
+
 export function getToolchain(operation) {
   return getCargoMetadata()?.toolchains?.[operation];
 }
